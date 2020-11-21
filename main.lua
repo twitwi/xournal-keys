@@ -4,22 +4,35 @@
 -- -ACTION_RULER (Does this toggle ruler, or is there a way to specify on/off?)
 -- Register all Toolbar actions and intialize all UI stuff
 function initUi()
-  app.registerUi({["menu"] = "Hand", ["callback"] = "hand", ["accelerator"] = "a"});
-  app.registerUi({["menu"] = "Select Region", ["callback"] = "lasso", ["accelerator"] = "g"});
-  app.registerUi({["menu"] = "Pen", ["callback"] = "pen", ["accelerator"] = "f"});
-  app.registerUi({["menu"] = "Highlighter", ["callback"] = "highlighter", ["accelerator"] = "<Shift>f"});
-  app.registerUi({["menu"] = "Undo", ["callback"] = "undo", ["accelerator"] = "r"});
-  app.registerUi({["menu"] = "Redo", ["callback"] = "redo", ["accelerator"] = "<Shift>r"});
-  app.registerUi({["menu"] = "Copy", ["callback"] = "copy", ["accelerator"] = "c"});
-  app.registerUi({["menu"] = "Paste", ["callback"] = "paste", ["accelerator"] = "v"});
-  app.registerUi({["menu"] = "Cut", ["callback"] = "cut", ["accelerator"] = "x"});
-  app.registerUi({["menu"] = "Delete", ["callback"] = "delete", ["accelerator"] = "t"});
---  app.registerUi({["menu"] = "Ruler", ["callback"] = "ruler", ["accelerator"] = "w"});
-  app.registerUi({["menu"] = "Eraser", ["callback"] = "eraser", ["accelerator"] = "e"});
-  app.registerUi({["menu"] = "Vertical space", ["callback"] = "space", ["accelerator"] = "s"});
-  app.registerUi({["menu"] = "Colors/black", ["callback"] = "black", ["accelerator"] = "1"});
-  app.registerUi({["menu"] = "Colors/red", ["callback"] = "red", ["accelerator"] = "2"});
-  app.registerUi({["menu"] = "Colors/green", ["callback"] = "green", ["accelerator"] = "3"});
+
+  -- see key names at https://github.com/tindzk/GTK/blob/master/gdk/gdkkeysyms.h
+
+  local s = {}
+  s["a"] = "hand";
+  s["g"] = "lasso";
+  s["f"] = "pen";
+  s["<Shift>f"] = "highlighter";
+  s["r"] = "undo";
+  s["<Shift>r"] = "redo";
+  s["c"] = "copy";
+  s["v"] = "paste";
+  s["x"] = "cut";
+  s["t"] = "delete";
+--  s["w"] = "ruler";
+  s["e"] = "eraser";
+  s["s"] = "space";
+  s["1"] = "black";
+  s["2"] = "red";
+  s["3"] = "green";
+
+  for k,v in pairs(s) do
+    app.registerUi({["menu"] = firstToUpper(v), ["callback"] = v, ["accelerator"] = k});
+  end
+
+end
+
+function firstToUpper(str)
+    return (str:gsub("^%l", string.upper))
 end
 
 function black()
