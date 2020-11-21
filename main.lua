@@ -18,12 +18,12 @@ function initUi()
   s["v"] = "paste";
   s["x"] = "cut";
   s["t"] = "delete";
---  s["w"] = "ruler";
   s["e"] = "eraser";
   s["s"] = "space";
-  s["1"] = "black";
-  s["2"] = "red";
-  s["3"] = "green";
+  s["1"] = "Black";
+  s["2"] = "Red";
+  s["3"] = "Light_Green";
+--  s["w"] = "ruler";
 
   for k,v in pairs(s) do
     app.registerUi({["menu"] = firstToUpper(v), ["callback"] = v, ["accelerator"] = k});
@@ -31,72 +31,49 @@ function initUi()
 
 end
 
+function act(a)
+  return function()
+    app.uiAction({["action"] = a})
+  end
+end
+
+function color(c)
+  return function()
+    app.changeToolColor({["color"] = c, ["tool"] = "pen", ["selection"] = true})
+  end
+end
+
 function firstToUpper(str)
     return (str:gsub("^%l", string.upper))
 end
 
-function black()
-	app.changeToolColor({["color"] = 0x000000, ["tool"] = "pen", ["selection"] = true})
-end
+-- see color names at https://github.com/xournalpp/xournalpp/blob/master/src/gui/toolbarMenubar/model/ToolbarColorNames.cpp
 
-function red()
-	app.changeToolColor({["color"] = 0xff0000, ["tool"] = "pen", ["selection"] = true})
-end
+Black = color(0x000000)
+Green = color(0x008000)
+Light_Blue = color(0x00c0ff)
+Light_Green = color(0x00ff00)
+Blue = color(0x3333cc)
+Gray = color(0x808080)
+Red = color(0xff0000)
+Magenta = color(0xff00ff)
+Orange = color(0xff8000)
+Yellow = color(0xffff00)
+White = color(0xffffff)
 
-function green()
-	app.changeToolColor({["color"] = 0x00ff00, ["tool"] = "pen", ["selection"] = true})
-end
+-- see actions at https://github.com/xournalpp/xournalpp/blob/master/src/enums/ActionType.enum.h
 
-function hand()
-  app.uiAction({["action"] = "ACTION_TOOL_HAND"})
-end
-
-function lasso()
-  app.uiAction({["action"] = "ACTION_TOOL_SELECT_REGION"})
-end
-
-function pen()
-  app.uiAction({["action"] = "ACTION_TOOL_PEN"})
-end
-
-function highlighter()
-  app.uiAction({["action"] = "ACTION_TOOL_HILIGHTER"})
-end
-
-function undo()
-  app.uiAction({["action"] = "ACTION_UNDO"})
-end
-
--- This doesn't work?
-function redo()
-  app.uiAction({["action"] = "ACTION_REDO"})
-end
-
-function copy()
-  app.uiAction({["action"] = "ACTION_COPY"})
-end
-
-function cut()
-  app.uiAction({["action"] = "ACTION_CUT"})
-end
-
-function paste()
-  app.uiAction({["action"] = "ACTION_PASTE"})
-end
-
-function delete()
-  app.uiAction({["action"] = "ACTION_DELETE"})
-end
-
-function eraser()
-  app.uiAction({["action"] = "ACTION_TOOL_ERASER"})
-end
-
-function space()
-  app.uiAction({["action"] = "ACTION_TOOL_VERTICAL_SPACE"})
-end
-
+hand = act("ACTION_TOOL_HAND")
+lasso = act("ACTION_TOOL_SELECT_REGION")
+pen = act("ACTION_TOOL_PEN")
+highlighter = act("ACTION_TOOL_HILIGHTER")
+undo = act("ACTION_UNDO")
+redo = act("ACTION_REDO")
+copy = act("ACTION_COPY")
+cut = act("ACTION_CUT")
+paste = act("ACTION_PASTE")
+delete = act("ACTION_DELETE")
+eraser = act("ACTION_TOOL_ERASER")
+space = act("ACTION_TOOL_VERTICAL_SPACE")
 -- Disable this because it doesn't turn the ruler off again
--- function ruler()
---   app.uiAction({["action"] = "ACTION_RULER"})
--- end
+-- ruler = act("ACTION_RULER")
