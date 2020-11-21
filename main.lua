@@ -23,8 +23,7 @@ function initUi()
   s["1"] = "Black";
   s["2"] = "Red";
   s["3"] = "Light_Green";
-  s["w"] = "ruler";
-  s["<shift>w"] = "noruler";
+  s["w"] = "toggleruler"; -- blindly
 
   for k,v in pairs(s) do
     app.registerUi({["menu"] = firstToUpper(v), ["callback"] = v, ["accelerator"] = k});
@@ -80,3 +79,9 @@ ruler = act("ACTION_RULER")
 function noruler()
     app.uiAction({["action"] = "ACTION_RULER", ["enabled"] = false})
 end
+ruler = false
+function toggleruler()
+    ruler = not ruler
+    app.uiAction({["action"] = "ACTION_RULER", ["enabled"] = ruler})
+end
+
