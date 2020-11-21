@@ -23,7 +23,8 @@ function initUi()
   s["1"] = "Black";
   s["2"] = "Red";
   s["3"] = "Light_Green";
---  s["w"] = "ruler";
+  s["w"] = "ruler";
+  s["<shift>w"] = "noruler";
 
   for k,v in pairs(s) do
     app.registerUi({["menu"] = firstToUpper(v), ["callback"] = v, ["accelerator"] = k});
@@ -75,5 +76,7 @@ paste = act("ACTION_PASTE")
 delete = act("ACTION_DELETE")
 eraser = act("ACTION_TOOL_ERASER")
 space = act("ACTION_TOOL_VERTICAL_SPACE")
--- Disable this because it doesn't turn the ruler off again
--- ruler = act("ACTION_RULER")
+ruler = act("ACTION_RULER")
+function noruler()
+    app.uiAction({["action"] = "ACTION_RULER", ["enabled"] = false})
+end
