@@ -8,22 +8,28 @@ function initUi()
   -- see key names at https://github.com/tindzk/GTK/blob/master/gdk/gdkkeysyms.h
 
   local s = {}
-  s["a"] = "hand";
-  s["g"] = "lasso";
-  s["f"] = "pen";
-  s["<Shift>f"] = "highlighter";
-  s["r"] = "undo";
-  s["<Shift>r"] = "redo";
-  s["c"] = "copy";
-  s["v"] = "paste";
-  s["x"] = "cut";
-  s["t"] = "delete";
-  s["e"] = "eraser";
-  s["s"] = "space";
-  s["1"] = "Black";
-  s["2"] = "Red";
-  s["3"] = "Light_Green";
-  s["w"] = "toggleruler"; -- blindly
+  -- s["a"] = "hand";
+  -- s["g"] = "lasso";
+  -- s["f"] = "pen";
+  -- s["<Shift>f"] = "highlighter";
+  -- s["r"] = "undo";
+  -- s["<Shift>r"] = "redo";
+  -- s["c"] = "copy";
+  -- s["v"] = "paste";
+  -- s["x"] = "cut";
+  -- s["t"] = "delete";
+  -- s["e"] = "eraser";
+  -- s["s"] = "space";
+  -- s["1"] = "Black";
+  -- s["2"] = "Red";
+  -- s["3"] = "Light_Green";
+  -- s["w"] = "toggleruler"; -- blindly
+  s["b"]      = "colorPrev"
+  s["eacute"] = "colorNext"
+  s["a"]      = "toolPrev"
+  s["u"]      = "toolNext"
+  s["x"]      = "copy"
+  s["period"] = "paste"
 
   for k,v in pairs(s) do
     app.registerUi({["menu"] = firstToUpper(v), ["callback"] = v, ["accelerator"] = k});
@@ -48,6 +54,30 @@ function firstToUpper(str)
 end
 
 -- see color names at https://github.com/xournalpp/xournalpp/blob/master/src/gui/toolbarMenubar/model/ToolbarColorNames.cpp
+
+local colorList = {
+  {"black", 0x000000},
+  {"green", 0x008000},
+  {"lightblue", 0x00c0ff},
+  {"lightgreen", 0x00ff00},
+  {"blue", 0x3333cc},
+  {"gray", 0x808080},
+  {"red", 0xff0000},
+  {"magenta", 0xff00ff},
+  {"orange", 0xff8000},
+  {"yellow", 0xffff00},
+  {"white", 0xffffff}
+}
+local currentColor = 4 -- start with blue color
+function colorStep(step)
+  return function()
+    currentColor = (currentColor + step - 1) % #colorList + 1
+    app.changeToolColor({["color"] = colorList[currentColor][2], ["selection"] = true})
+    print("Color: " .. colorList[currentColor][1])
+  end
+end
+colorNext = colorStep(1)
+colorPrev = colorStep(-1)
 
 Black = color(0x000000)
 Green = color(0x008000)
@@ -85,3 +115,24 @@ function toggleruler()
     app.uiAction({["action"] = "ACTION_RULER", ["enabled"] = hasRuler})
 end
 
+local toolList = {"PEN", "SELECTION", "RULER", "ERASER"} -- "HIGHLIGHTER"
+local currentTool = 1
+function toolStep(step)
+  return function()
+    currentTool = (currentTool + step - 1) % #toolList + 1
+    if (toolList[currentTool] == "SELECTION") then
+      app.uiAction({["action"] = "ACTION_TOOL_SELECT_RECT"})
+      return
+    end
+    if (toolList[currentTool] == "RULER") then
+      pen()
+      ruler()
+      return
+    end
+    noruler()
+    app.uiAction({["action"] = "ACTION_TOOL_" .. toolList[currentTool]})
+    noruler()
+  end
+end
+toolNext = toolStep(1)
+toolPrev = toolStep(-1)
