@@ -79,9 +79,9 @@ ruler = act("ACTION_RULER")
 function noruler()
     app.uiAction({["action"] = "ACTION_RULER", ["enabled"] = false})
 end
-ruler = false
+hasRuler = false
 function toggleruler()
-    ruler = not ruler
-    app.uiAction({["action"] = "ACTION_RULER", ["enabled"] = ruler})
+    ruler = not hasRuler
+    app.uiAction({["action"] = "ACTION_RULER", ["enabled"] = hasRuler})
 end
 
